@@ -1,0 +1,98 @@
+-- Create a new database for Tech Tune Motors
+CREATE DATABASE techtunemotors;
+
+-- Use the newly created database
+USE techtunemotors;
+
+-- Create a table to store car information
+CREATE TABLE cars (
+    car_id INT AUTO_INCREMENT PRIMARY KEY,
+    make VARCHAR(100) NOT NULL,
+    model VARCHAR(100) NOT NULL,
+    year INT NOT NULL,
+    mileage INT,
+    color VARCHAR(50),
+    fuel_type VARCHAR(50),
+    description TEXT
+);
+
+-- Create a table to store customer information
+CREATE TABLE customers (
+    customer_id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    phone VARCHAR(20),
+    address VARCHAR(255)
+);
+
+-- Create a table to store services
+CREATE TABLE services (
+    service_id INT AUTO_INCREMENT PRIMARY KEY,
+    car_id INT,
+    service_date DATE,
+    service_type VARCHAR(100),
+    service_description TEXT,
+    service_cost DECIMAL(10, 2),
+    FOREIGN KEY (car_id) REFERENCES cars(car_id)
+);
+
+-- Create a table to store repairs
+CREATE TABLE repairs (
+    repair_id INT AUTO_INCREMENT PRIMARY KEY,
+    car_id INT,
+    repair_date DATE,
+    repair_description TEXT,
+    repair_cost DECIMAL(10, 2),
+    FOREIGN KEY (car_id) REFERENCES cars(car_id)
+);
+
+-- Create a table to store service history
+CREATE TABLE service_history (
+    service_history_id INT AUTO_INCREMENT PRIMARY KEY,
+    car_id INT,
+    service_id INT,
+    service_date DATE,
+    service_description TEXT,
+    FOREIGN KEY (car_id) REFERENCES cars(car_id),
+    FOREIGN KEY (service_id) REFERENCES services(service_id)
+);
+
+-- Create a table to store repair history
+CREATE TABLE repair_history (
+    repair_history_id INT AUTO_INCREMENT PRIMARY KEY,
+    car_id INT,
+    repair_id INT,
+    repair_date DATE,
+    repair_description TEXT,
+    FOREIGN KEY (car_id) REFERENCES cars(car_id),
+    FOREIGN KEY (repair_id) REFERENCES repairs(repair_id)
+);
+-- Create a table to store parts inventory
+CREATE TABLE inventory (
+    part_id INT AUTO_INCREMENT PRIMARY KEY,
+    part_name VARCHAR(100) NOT NULL,
+    part_description TEXT,
+    part_quantity INT,
+    part_price DECIMAL(10, 2)
+);
+
+-- Create a table to store invoices
+CREATE TABLE invoices (
+    invoice_id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT,
+    invoice_date DATE,
+    total_amount DECIMAL(10, 2),
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+);
+
+-- Create a table to store invoice line items
+CREATE TABLE invoice_items (
+    item_id INT AUTO_INCREMENT PRIMARY KEY,
+    invoice_id INT,
+    part_id INT,
+    quantity INT,
+    item_price DECIMAL(10, 2),
+    FOREIGN KEY (invoice_id) REFERENCES invoices(invoice_id),
+    FOREIGN KEY (part_id) REFERENCES inventory(part_id)
+);
